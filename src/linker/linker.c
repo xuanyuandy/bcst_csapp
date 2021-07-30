@@ -108,3 +108,10 @@ int main(int argc, char **argv)
 
     return 0;
 }
+
+/*
+dynamic link operation
+bin/link main sum -o output?
+the order layout of section depends on the layout of the link order
+Here is the diffence between main sum and sum main
+*/

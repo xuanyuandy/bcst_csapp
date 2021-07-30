@@ -261,10 +261,10 @@ static void split_bucket_full(hashtable_t *tab, hashtable_bucket_t *b)
 
 static void insert_bucket_tail(hashtable_t *tab, hashtable_bucket_t *b, char *key, uint64_t val)
 {
-    assert(b->localdepth <= tab->globaldepth);
-    assert(b->counter < tab->size);
-    assert(b->karray[b->counter] == NULL);
-    assert(b->varray[b->counter] == 0x0);
+    // assert(b->localdepth <= tab->globaldepth);
+    // assert(b->counter < tab->size);
+    // assert(b->karray[b->counter] == NULL);
+    // assert(b->varray[b->counter] == 0x0);
 
     // insert the key
     b->karray[b->counter] = malloc((strlen(key) + 1) * sizeof(char));

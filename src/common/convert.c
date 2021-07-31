@@ -20,6 +20,7 @@ uint64_t string2uint(const char *str)
     return string2uint_range(str, 0, -1);
 }
 
+// the whole convert is based on the bitmap
 uint64_t string2uint_range(const char *str, int start, int end)
 {
     // start: starting index inclusive
@@ -184,6 +185,8 @@ uint64_t string2uint_range(const char *str, int start, int end)
             exit(0);
         }
         int64_t sv = -1 * (int64_t)uv;
+        // force explain a signed int64_t number to no signed uint64_t number 
+        // in bitmap
         return *((uint64_t *)&sv);
     }
 

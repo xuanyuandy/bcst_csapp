@@ -607,6 +607,7 @@ static void relocation_processing(elf_t **srcs, int num_srcs, elf_t *dst,
 {
     sh_entry_t *eof_text_sh = NULL;
     sh_entry_t *eof_data_sh = NULL;
+    // bind the pointer with the modifying symbol 
     for (int i = 0; i < dst->sht_count; ++ i)
     {
         if (strcmp(dst->sht[i].sh_name, ".text") == 0)
@@ -619,17 +620,19 @@ static void relocation_processing(elf_t **srcs, int num_srcs, elf_t *dst,
         }
     }
 
-    // update the relocation entries: r_row, r_col, sym
+    // update the relocation entries in the whole elf_file: r_row, r_col, sym
     for (int i = 0; i < num_srcs; ++ i)
     {
         elf_t *elf = srcs[i];
 
+        // this global order is displayed in .text,.data
         // .rel.text
         for (int j = 0; j < elf->reltext_count; ++ j)
         {
             rl_entry_t *r = &elf->reltext[j];
-
+            
             // search the referencing symbol
+
             for (int k = 0; k < elf->symt_count; ++ k)
             {
                 st_entry_t *sym = &elf->symt[k];
@@ -686,7 +689,8 @@ static void relocation_processing(elf_t **srcs, int num_srcs, elf_t *dst,
             ;
         }
 
-        // .rel.data
+    // .rel.data
+    // the rel.text and rel.data search all depend on the primary elf file's relocate segment
         for (int j = 0; j < elf->reldata_count; ++ j)
         {
             rl_entry_t *r = &elf->reldata[j];
@@ -764,8 +768,11 @@ static uint64_t get_symbol_runtime_address(elf_t *dst, st_entry_t *sym)
     int inst_size = sizeof(inst_t);
     int data_size = sizeof(uint64_t);
 
+    // when the program is running there is only section segment load into the running memory
     // must visit in .text, .rodata, .data order
     sh_entry_t *sht = dst->sht;
+
+    // the global relocation
     for (int i = 0; i < dst->sht_count; ++ i)
     {
         if (strcmp(sht[i].sh_name, ".text") == 0)
@@ -778,7 +785,8 @@ static uint64_t get_symbol_runtime_address(elf_t *dst, st_entry_t *sym)
             data_base = rodata_base + sht[i].sh_size * data_size;
         }
     }
-    
+
+    // the partial relocation, by use the global relocation to speed up finding the right place
     // check this symbol's section
     if (strcmp(sym->st_shndx, ".text") == 0)
     {
@@ -810,6 +818,9 @@ static void R_X86_64_32_handler(elf_t *dst, sh_entry_t *sh,
     int row_referencing, int col_referencing, int addend,
     st_entry_t *sym_referenced)
 {
+    printf("sym_referenced_name: %s \n", sym_referenced->st_name);
+    printf("row_referencing postion : %d\n", row_referencing);
+    printf("sh->sh_offset : %ld\n", sh->sh_offset);
     uint64_t sym_address = get_symbol_runtime_address(dst, sym_referenced);
     char *s = &dst->buffer[sh->sh_offset + row_referencing][col_referencing];
     write_relocation(s, sym_address);
@@ -820,8 +831,14 @@ static void R_X86_64_PC32_handler(elf_t *dst, sh_entry_t *sh,
     st_entry_t *sym_referenced)
 {
     assert(strcmp(sh->sh_name, ".text") == 0);
+    printf("sym_referenced_name: %s \n", sym_referenced->st_name);
+    printf("row_referencing postion : %d\n", row_referencing);
+    printf("sh->sh_offset : %ld\n", sh->sh_offset);
+    // this address is offset 1 between the real txt and the char array temp memory
+    printf("write address:%ld\n", sh->sh_offset + row_referencing);
 
     uint64_t sym_address = get_symbol_runtime_address(dst, sym_referenced);
+    // the code text is placed in order 
     uint64_t rip_value = 0x00400000 + (row_referencing + 1) * sizeof(inst_t);
     char *s = &dst->buffer[sh->sh_offset + row_referencing][col_referencing];
     write_relocation(s, sym_address - rip_value);

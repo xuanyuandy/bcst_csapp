@@ -292,6 +292,7 @@ void parse_elf(char *filename, elf_t *elf)
         "parse_elf");
 
     sh_entry_t *symt_sh = NULL;
+    // this is arraged by the section header table
     sh_entry_t *rtext_sh = NULL;
     sh_entry_t *rdata_sh = NULL;
     for (int i = 0; i < elf->sht_count; ++ i)

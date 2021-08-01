@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-# usage: 
+# usage:
 #   ./cmd.py argv[1] argv[2], ...
 #   /usr/bin/python3 ./cmd.py argv[1] argv[2], ...
 import sys
@@ -136,7 +136,7 @@ def build(key):
     gcc_map = {
         KEY_MACHINE : [
                 [
-                    "/usr/bin/gcc-7", 
+                    "/usr/bin/gcc-7",
                     "-Wall", "-g", "-O0", "-Werror", "-std=gnu99", "-Wno-unused-function",
                     "-I", "./src",
                     "./src/tests/test_machine.c",
@@ -153,7 +153,7 @@ def build(key):
             ],
         KEY_LINKER : [
                 [
-                    "/usr/bin/gcc-7", 
+                    "/usr/bin/gcc-7",
                     "-Wall", "-g", "-O0", "-Werror", "-std=gnu99", "-Wno-unused-function",
                     "-I", "./src",
                     "./src/tests/test_elf.c",
@@ -169,7 +169,7 @@ def build(key):
                     "-o", EXE_BIN_LINKER
                 ],
                 [
-                    "/usr/bin/gcc-7", 
+                    "/usr/bin/gcc-7",
                     "-Wall", "-g", "-O0", "-Werror", "-std=gnu99", "-Wno-unused-function",
                     "-I", "./src",
                     "-shared", "-fPIC",
@@ -185,7 +185,7 @@ def build(key):
                     "-o", "./bin/staticLinker.so"
                 ],
                 [
-                    "/usr/bin/gcc-7", 
+                    "/usr/bin/gcc-7",
                     "-Wall", "-g", "-O0", "-Werror", "-std=gnu99", "-Wno-unused-function",
                     "-I", "./src",
                     "./src/common/print.c",
@@ -195,7 +195,7 @@ def build(key):
                     "./src/algorithm/array.c",
                     "./src/algorithm/hashtable.c",
                     "./src/algorithm/linkedlist.c",
-                    "./src/linker/linker.c", 
+                    "./src/linker/linker.c",
                     "-ldl", "-o", "./bin/link"
                 ],
             ]
@@ -248,23 +248,21 @@ def mem_check(key):
 
 def cache_verify():
     make_build_directory()
-    csim_ref_file = "/mnt/e/Ubuntu/cache/csim-ref"
-    trace_dir = "/mnt/e/Ubuntu/cache/traces/"
+    csim_ref_file = "/home/dytc/csapp/cmu-csapp/labs/04-cache-lab/csim-ref"
+    trace_dir = "/home/dytc/csapp/cmu-csapp/labs/04-cache-lab/traces/"
 
     assert(os.path.isfile(csim_ref_file))
     assert(os.path.isdir(trace_dir))
 
     test_cases = [
         # s E b
-        [   2,  1,      2,  "wide.trace"    ],
-        [   3,  2,      2,  "load.trace"    ],
         [   1,  1,      1,  "yi2.trace"     ],
-        [   4,  2,      4,  "yi.trace"      ],
-        [   2,  1,      4,  "dave.trace"    ],
-        [   2,  1,      3,  "trans.trace"   ],
-        [   2,  2,      3,  "trans.trace"   ],
-        [   14, 1024,   3,  "trans.trace"   ],
-        [   5,  1,      5,  "trans.trace"   ],
+        # [   4,  2,      4,  "yi.trace"      ],
+        # [   2,  1,      4,  "dave.trace"    ],
+        # [   2,  1,      3,  "trans.trace"   ],
+        # [   2,  2,      3,  "trans.trace"   ],
+        # [   14, 1024,   3,  "trans.trace"   ],
+        # [   5,  1,      5,  "trans.trace"   ],
         [   5,  1,      5,  "long.trace"    ],
     ]
 
@@ -274,9 +272,11 @@ def cache_verify():
         a = [
             "/usr/bin/python3",
             "./src/hardware/cpu/cache_verify.py",
-            "/mnt/e/Ubuntu/cache/csim-ref",
-            "/mnt/e/Ubuntu/cache/traces/" + file,
-            str(s), str(E), str(b),
+            "/home/dytc/csapp/cmu-csapp/labs/04-cache-lab/csim-ref",
+            "/home/dytc/csapp/cmu-csapp/labs/04-cache-lab/traces/" + file,
+            str(s),
+            str(E),
+            str(b),
         ]
         print(" ".join(a))
         subprocess.run(a)

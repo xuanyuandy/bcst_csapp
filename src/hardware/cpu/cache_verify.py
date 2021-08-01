@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-# usage: 
+# usage:
 #   ./cmd.py argv[1] argv[2], ...
 #   /usr/bin/python3 ./cmd.py argv[1] argv[2], ...
 import sys
@@ -29,19 +29,20 @@ def scan_ints(s):
             results += [0]
         elif state == 1 and not(ord('0') <= c and c <= ord('9')):
             state = 0
-        
+
         if state == 1:
             results[-1] = results[-1] * 10 + int(c - ord('0'))
         i += 1
-        
-    assert(len(results) == 5)
+    # return the value the csim-ref program return
+    # assert(len(results) == 5)
     return results
 
+# return the specific number and each segment's status
 def run_csim_ref(s, E, b, csim_ref_file, trace_file):
     # ./csim -s 0 -E 1 -b 0 -t traces/wide.trace
     proc = subprocess.run([
         csim_ref_file,
-        "-v", 
+        "-v",
         "-s", str(s),
         "-E", str(E),
         "-b", str(b),
@@ -56,15 +57,15 @@ def run_csim_ref(s, E, b, csim_ref_file, trace_file):
     stat_line = ""
     trace = []
     for line in data:
-        if line.endswith("hit"):
+        if line.endswith("hit "):
             trace += ["hit"]
-        elif line.endswith("miss"):
+        elif line.endswith("miss "):
             trace += ["miss"]
-        elif line.endswith("miss eviction"):
+        elif line.endswith("miss eviction "):
             trace += ["miss eviction"]
         elif line.startswith("hits:"):
             stat_line = line
-
+    # print(trace)
     return scan_ints(stat_line), trace
 
 def read_trace(trace_file):
@@ -78,13 +79,12 @@ def read_trace(trace_file):
                 #   S 7ff000388,4
                 split_space = (line.strip(" ")).split(" ")
                 assert(len(split_space) == 2)
-
                 op = split_space[0]
                 assert(op == "L" or op == "S")
 
                 split_comma = (split_space[1]).split(",")
                 assert(len(split_comma) == 2)
-                
+
                 paddr = int("0x" + split_comma[0], 16)
 
                 bsize = int(split_comma[1])
@@ -108,19 +108,19 @@ def run_csim(s, E, b, trace_file, ref_trace):
     # compile
     subprocess.run(
         [
-            "/usr/bin/gcc-7", 
+            "/usr/bin/gcc-7",
             "-Wall", "-g", "-O0", "-Werror", "-std=gnu99", "-Wno-unused-function",
             "-I", "./src",
             "-D", "CACHE_SIMULATION_VERIFICATION", # define not to call the dram functions
-            "-DSRAM_CACHE_INDEX_LENGTH=%d" % s, 
-            "-DSRAM_CACHE_OFFSET_LENGTH=%d" % b, 
+            "-DSRAM_CACHE_INDEX_LENGTH=%d" % s,
+            "-DSRAM_CACHE_OFFSET_LENGTH=%d" % b,
             "-DNUM_CACHE_LINE_PER_SET=%d" % E,
             "-DSRAM_CACHE_TAG_LENGTH=%d" % (64 - s -  b),
             "-shared", "-fPIC",
             "./src/hardware/cpu/sram.c",
             "-ldl", "-o", "./bin/csim.so"
         ])
-    
+
     # read trace file
     trace = read_trace(trace_file)
 
@@ -133,21 +133,21 @@ def run_csim(s, E, b, trace_file, ref_trace):
         if debug:
             print_paddr(paddr, s, b)
             print(op, "%x" % paddr, bsize)
-        
+
         if op == "L":
             lib.sram_cache_read(c_ulonglong(paddr))
         elif op == "S":
             lib.sram_cache_write(c_ulonglong(paddr), c_byte(1))
-        
+
         if debug:
             lib.print_cache()
             lib.fflush(None)
-        
+
         cache_behavior = ((c_char_p.in_dll(lib, "trace_ptr")).value).decode("ascii")
-        
+
         if debug:
             print("test:", cache_behavior, "ref:", ref_trace[i])
-        
+
         if (cache_behavior != ref_trace[i]):
             print("[%d] conflict!" % (i))
             pass_trace = False
@@ -161,8 +161,6 @@ def run_csim(s, E, b, trace_file, ref_trace):
         (c_int.in_dll(lib, "cache_hit_count")).value,
         (c_int.in_dll(lib, "cache_miss_count")).value,
         (c_int.in_dll(lib, "cache_evict_count")).value,
-        (c_int.in_dll(lib, "dirty_bytes_in_cache_count")).value,
-        (c_int.in_dll(lib, "dirty_bytes_evicted_count")).value,
     ]
 
 def cache_test(s, E, b, trace_file, csim_ref_file):
@@ -208,7 +206,7 @@ def print_table(data):
         for i in range(w):
             bar += "-"
         bar += "+"
-    
+
     def format_line(line):
         temp = "|"
         for j in range(nc):
@@ -245,6 +243,8 @@ if len(sys.argv) == 7:
 assert(os.path.isfile(csim_ref_file))
 assert(os.path.isfile(trace_file))
 
+print(trace_file)
+print(csim_ref_file)
 if cache_test(s, E, b, trace_file, csim_ref_file):
     print("Pass")
 else:

@@ -174,7 +174,7 @@ def build(key):
     gcc_map = {
         "isa" : [
                 [
-                    "/usr/bin/gcc-7", 
+                    "/usr/bin/gcc-9", 
                     "-Wall", "-g", "-O0", "-Werror", "-std=gnu99", "-Wno-unused-function", "-Wno-unused-variable",
                     "-I", "./src",
                     "-DDEBUG_INSTRUCTION_CYCLE",
@@ -191,7 +191,7 @@ def build(key):
             ],
         "int" : [
                 [
-                    "/usr/bin/gcc-7", 
+                    "/usr/bin/gcc-9", 
                     "-Wall", "-g", "-O0", "-Werror", "-std=gnu99", "-Wno-unused-but-set-variable", "-Wno-unused-variable", "-Wno-unused-function",
                     "-I", "./src",
                     "-DDEBUG_INSTRUCTION_CYCLE",
@@ -216,7 +216,7 @@ def build(key):
             ],
         "ctx" : [
                 [
-                    "/usr/bin/gcc-7", 
+                    "/usr/bin/gcc-9", 
                     "-Wall", "-g", "-O0", "-Werror", "-std=gnu99", "-Wno-unused-but-set-variable", "-Wno-unused-variable", "-Wno-unused-function",
                     "-I", "./src",
                     "-DDEBUG_INSTRUCTION_CYCLE",
@@ -243,7 +243,7 @@ def build(key):
             ],
         "pgf" : [
                 [
-                    "/usr/bin/gcc-7", 
+                    "/usr/bin/gcc-9", 
                     "-Wall", "-g", "-O0", "-Werror", "-std=gnu99", "-Wno-unused-but-set-variable", "-Wno-unused-variable", "-Wno-unused-function",
                     "-I", "./src",
                     "-DDEBUG_INSTRUCTION_CYCLE",
@@ -270,7 +270,7 @@ def build(key):
             ],
         "inst" : [
                 [
-                    "/usr/bin/gcc-7", 
+                    "/usr/bin/gcc-9", 
                     "-Wall", "-g", "-O0", "-Werror", "-std=gnu99", "-Wno-unused-function", "-Wno-unused-variable",
                     "-I", "./src",
                     "-DDEBUG_INSTRUCTION_CYCLE",
@@ -285,7 +285,7 @@ def build(key):
             ],
         "link" : [
                 [
-                    "/usr/bin/gcc-7", 
+                    "/usr/bin/gcc-9", 
                     "-Wall", "-g", "-O0", "-Werror", "-std=gnu99", "-Wno-unused-function",
                     "-I", "./src",
                     "-shared", "-fPIC",
@@ -298,7 +298,7 @@ def build(key):
                     "-o", "./bin/staticLinker.so"
                 ],
                 [
-                    "/usr/bin/gcc-7", 
+                    "/usr/bin/gcc-9", 
                     "-Wall", "-g", "-O0", "-Werror", "-std=gnu99", "-Wno-unused-function",
                     "-I", "./src",
                     # "-DDEBUG_LINK",
@@ -312,7 +312,7 @@ def build(key):
             ],
         "elf" : [
                 [
-                    "/usr/bin/gcc-7", 
+                    "/usr/bin/gcc-9", 
                     "-Wall", "-g", "-O0", "-Werror", "-std=gnu99", 
                     "-Wno-unused-function",
                     "-Wno-unused-but-set-variable",
@@ -329,7 +329,7 @@ def build(key):
             ],
         "mesi" : [
                 [
-                    "/usr/bin/gcc-7", 
+                    "/usr/bin/gcc-9", 
                     "-Wall", "-g", "-O0", "-Werror", "-std=gnu99", "-Wno-unused-but-set-variable",
                     "-I", "./src",
                     # "-DDEBUG",
@@ -339,7 +339,7 @@ def build(key):
             ],
         "false_sharing" : [
                 [
-                    "/usr/bin/gcc-7", 
+                    "/usr/bin/gcc-9", 
                     "-Wall", "-g", "-O0", "-Werror", "-std=gnu99", "-Wno-unused-but-set-variable", "-Wno-unused-variable",
                     "-I", "./src",
                     "-pthread",
@@ -349,7 +349,7 @@ def build(key):
             ],
         "rbt" : [
                 [
-                    "/usr/bin/gcc-7", 
+                    "/usr/bin/gcc-9", 
                     "-Wall", "-g", "-O0", "-Werror", "-std=gnu99", "-Wno-unused-but-set-variable", "-Wno-unused-variable", "-Wno-unused-function",
                     "-I", "./src",
                     "-DDEBUG_REDBLACK",
@@ -362,7 +362,7 @@ def build(key):
             ],
         "trie" : [
                 [
-                    "/usr/bin/gcc-7", 
+                    "/usr/bin/gcc-9", 
                     "-Wall", "-g", "-O0", "-Werror", "-std=gnu99", "-Wno-unused-but-set-variable", "-Wno-unused-variable", "-Wno-unused-function",
                     "-I", "./src",
                     "-DDEBUG_TRIE",
@@ -373,7 +373,7 @@ def build(key):
             ],
         "bst" : [
                 [
-                    "/usr/bin/gcc-7", 
+                    "/usr/bin/gcc-9", 
                     "-Wall", "-g", "-O0", "-Werror", "-std=gnu99", "-Wno-unused-but-set-variable", "-Wno-unused-variable", "-Wno-unused-function",
                     "-I", "./src",
                     "-DDEBUG_BST",
@@ -385,7 +385,7 @@ def build(key):
             ],
         "malloc" : [
                 [
-                    "/usr/bin/gcc-7", 
+                    "/usr/bin/gcc-9", 
                     "-Wall", "-g", "-O0", "-Werror", "-std=gnu99", "-Wno-unused-but-set-variable", "-Wno-unused-variable", "-Wno-unused-function",
                     "-I", "./src",
                     "-DDEBUG_MALLOC",
@@ -409,7 +409,7 @@ def build(key):
             ],
         "convert" : [
                 [
-                    "/usr/bin/gcc-7", 
+                    "/usr/bin/gcc-9", 
                     "-Wall", "-g", "-O0", "-Werror", "-std=gnu99", "-Wno-unused-but-set-variable", "-Wno-unused-variable", "-Wno-unused-function",
                     "-I", "./src",
                     "-DDEBUG_BST",

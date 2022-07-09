@@ -94,7 +94,7 @@ static void TestSyscallPrintHelloWorld()
     tss_s0_t tss;
 
     tss.ESP0 = (uint64_t)kstack + KERNEL_STACK_SIZE;
-    cpu_task_register = (uint64_t)&tss;
+    // cpu_task_register = (uint64_t)&tss;
 
     pcb_t curr;
     curr.prev = &curr;
